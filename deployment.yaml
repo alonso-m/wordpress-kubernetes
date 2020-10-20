@@ -16,24 +16,16 @@ spec:
       labels:
         app: wordpress
     spec:
-      #      affinity:
-      #        podAntiAffinity:
-      #          preferredDuringSchedulingIgnoredDuringExecution:
-      #          - weight: 100
-      #            podAffinityTerm:
-      #              labelSelector:
-      #                matchExpressions:
-      #                - key: app
-      #                  operator: In
-      #                  values:
-      #                  - bitbucket
-      #                  - bamboo
-      #                  - nextcloud
-      #                  key: app.kubernetes.io/instance
-      #                  operator: In
-      #                  values:
-      #                  - jellyfin
-      #              topologyKey: "kubernetes.io/hostname"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: k3s.io/hostname
+                operator: In
+                values:
+                - node02
+                - node06
       #        podAffinity:
       #          preferredDuringSchedulingIgnoredDuringExecution:
       #          - weight: 100
@@ -48,6 +40,7 @@ spec:
       containers:
         - name: wordpress
           image: wordpress:php7.4
+          imagePullPolicy: "Always"
           envFrom:
           - configMapRef:
               name: wordpress-config
@@ -59,8 +52,8 @@ spec:
           volumeMounts:
             - mountPath: /var/www/html
               name: wordpress-pv
-      nodeSelector:
-        k3s.io/hostname: "node06"
+              #      nodeSelector:
+              #        k3s.io/hostname: "node06"
       volumes:
         - name: wordpress-pv
           persistentVolumeClaim:
