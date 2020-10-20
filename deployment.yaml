@@ -5,44 +5,46 @@ metadata:
   labels: 
     app: wordpress
 spec:
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: wordpress
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
         app: wordpress
     spec:
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - bitbucket
-                  - bamboo
-                  - nextcloud
-                  key: app.kubernetes.io/instance
-                  operator: In
-                  values:
-                  - jellyfin
-              topologyKey: "kubernetes.io/hostname"
-        podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - mysql
-              topologyKey: "kubernetes.io/hostname"
+      #      affinity:
+      #        podAntiAffinity:
+      #          preferredDuringSchedulingIgnoredDuringExecution:
+      #          - weight: 100
+      #            podAffinityTerm:
+      #              labelSelector:
+      #                matchExpressions:
+      #                - key: app
+      #                  operator: In
+      #                  values:
+      #                  - bitbucket
+      #                  - bamboo
+      #                  - nextcloud
+      #                  key: app.kubernetes.io/instance
+      #                  operator: In
+      #                  values:
+      #                  - jellyfin
+      #              topologyKey: "kubernetes.io/hostname"
+      #        podAffinity:
+      #          preferredDuringSchedulingIgnoredDuringExecution:
+      #          - weight: 100
+      #            podAffinityTerm:
+      #              labelSelector:
+      #                matchExpressions:
+      #                - key: app
+      #                  operator: In
+      #                  values:
+      #                  - mysql
+      #              topologyKey: "kubernetes.io/hostname"
       containers:
         - name: wordpress
           image: wordpress:php7.4
@@ -57,6 +59,8 @@ spec:
           volumeMounts:
             - mountPath: /var/www/html
               name: wordpress-pv
+      nodeSelector:
+        k3s.io/hostname: "node06"
       volumes:
         - name: wordpress-pv
           persistentVolumeClaim:
