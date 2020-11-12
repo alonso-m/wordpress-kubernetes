@@ -11,5 +11,5 @@ spec:
   accessModes:                                                                                                                                          
     - ReadWriteMany                                                                                                                                     
   nfs:                                                                                                                                                  
-    path: /zfs/encrypted/application-data/wordpress
+    path: /mnt/kingston/application-data/wordpress
     server: node00
