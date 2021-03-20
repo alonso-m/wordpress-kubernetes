@@ -10,6 +10,7 @@ spec:
     storage: 10Gi                                                                                                                                      
   accessModes:                                                                                                                                          
     - ReadWriteMany                                                                                                                                     
-  nfs:                                                                                                                                                  
+  hostPath:
+    #  nfs:                                                                                                                                                  
     path: /mnt/kingston/application-data/wordpress
-    server: node00
+    #    server: node00
